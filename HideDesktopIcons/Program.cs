@@ -5,7 +5,6 @@ namespace HideDesktopIcons
 {
     class Program
     {
-        private static string[] BlockList = { "desktop.ini" };
         static void Main(string[] args)
         {
             string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
@@ -15,9 +14,10 @@ namespace HideDesktopIcons
 
         public static void ToggleItems(string[] items)
         {
+            string[] BlockList = LoadBlocklist();
             foreach (string s in items)
             {
-                if (blocklist(s))
+                if (OnBlocklist(s, BlockList))
                 {
                     continue;
                 }
@@ -38,18 +38,36 @@ namespace HideDesktopIcons
             }
         }
 
-        private static bool blocklist(string s)
+        private static bool OnBlocklist(string s, string[] BlockList)
         {
-            bool exists = Array.Exists(
+            bool fexists = Array.Exists(
                 BlockList,
                 delegate (string _) { return _.Equals(Path.GetFileName(s)); }
             );
-            
-            if (exists)
+
+            bool dexists = Array.Exists(
+                BlockList,
+                delegate (string _) { return _.Equals(Path.GetDirectoryName(s)); }
+            );
+
+            if (fexists || dexists)
             {
                 return true;
             }
             return false;
+        }
+
+        private static string[] LoadBlocklist()
+        {
+            if (File.Exists("blocklist.txt"))
+            {
+                return File.ReadAllLines("blocklist.txt");
+            }
+            else
+            {
+                // return default list of only desktop.ini
+                return new string[] { "desktop.ini" };
+            }
         }
     }
 }
