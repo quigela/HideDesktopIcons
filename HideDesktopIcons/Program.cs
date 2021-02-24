@@ -1,5 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
+using System.Reflection;
+using System.Security.Principal;
 
 namespace HideDesktopIcons
 {
@@ -7,9 +11,13 @@ namespace HideDesktopIcons
     {
         static void Main(string[] args)
         {
-            string desktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-            ToggleItems(Directory.GetFiles(desktop));
-            ToggleItems(Directory.GetDirectories(desktop));
+            string userDesktop = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            ToggleItems(Directory.GetFiles(userDesktop));
+            ToggleItems(Directory.GetDirectories(userDesktop));
+
+            string publicDesktop = Environment.GetFolderPath(Environment.SpecialFolder.CommonDesktopDirectory);
+            ToggleItems(Directory.GetFiles(publicDesktop));
+            ToggleItems(Directory.GetDirectories(publicDesktop));
         }
 
         public static void ToggleItems(string[] items)
