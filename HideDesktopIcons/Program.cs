@@ -50,12 +50,12 @@ namespace HideDesktopIcons
         {
             bool fexists = Array.Exists(
                 BlockList,
-                delegate (string _) { return _.Equals(Path.GetFileName(s)); }
+                delegate (string _) { return _.Equals(Path.GetFileName(s), StringComparison.InvariantCultureIgnoreCase); }
             );
 
             bool dexists = Array.Exists(
                 BlockList,
-                delegate (string _) { return _.Equals(Path.GetDirectoryName(s)); }
+                delegate (string _) { return _.Equals(Path.GetDirectoryName(s), StringComparison.InvariantCultureIgnoreCase); }
             );
 
             if (fexists || dexists)
@@ -74,7 +74,7 @@ namespace HideDesktopIcons
             else
             {
                 // return default list of only desktop.ini
-                return new string[] { "desktop.ini" };
+                return new string[] { "desktop.ini", "Thumbs.db" };
             }
         }
     }
